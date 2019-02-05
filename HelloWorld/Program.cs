@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace HelloWorld
 {
+    public enum Enum1 { asd, asds };
+
     class Program
     {
         static void Main(string[] args)
@@ -33,6 +35,11 @@ namespace HelloWorld
             Console.WriteLine($"Maximal Wert eines Integers: {int.MaxValue}");
 
             Console.WriteLine($"Durchschnittsalter: {(alter1 + (double)alter2) / 2}");
+
+            Enum1 asd = Enum1.asd;
+
+            Enums.Farben farbe = Enums.Farben.Blau;
+           
 
             Console.ReadKey();
         }

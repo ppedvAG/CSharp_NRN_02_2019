@@ -48,7 +48,6 @@ namespace Lotto
             Random random = new Random();
             for (int i = 0; i < Anzahl_Zu_Ziehende_Zahlen; i++)
             {
-                //TODO: doppelte Zahlen vermeiden
                 int potentielleNeueZahl;
 
                 do
