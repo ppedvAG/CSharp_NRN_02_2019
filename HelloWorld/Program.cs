@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HelloWorld
 {
-    public enum Enum1 { asd, asds };
+    public enum Enum1 { Wert1, Wert2 };
 
     class Program
     {
@@ -16,9 +16,9 @@ namespace HelloWorld
 
             //snippet: cw
             Console.Write("Bitte gib deinen Namen ein: ");
-            
+
             string name = Console.ReadLine();
-            
+
 
             Console.WriteLine("Hallo " + name + ", viel Erfolg mit C#!");
             Console.WriteLine("Hallo {0}, viel Erfolg mit C#!", name);
@@ -30,16 +30,16 @@ namespace HelloWorld
 
             Console.Write("Alter 2: ");
             int alter2 = int.Parse(Console.ReadLine());
-            
+
             string zahlAlsWort = (15).ToString();
             Console.WriteLine($"Maximal Wert eines Integers: {int.MaxValue}");
 
             Console.WriteLine($"Durchschnittsalter: {(alter1 + (double)alter2) / 2}");
 
-            Enum1 asd = Enum1.asd;
+            Enum1 asd = Enum1.Wert1;
 
             Enums.Farben farbe = Enums.Farben.Blau;
-           
+
 
             Console.ReadKey();
         }
