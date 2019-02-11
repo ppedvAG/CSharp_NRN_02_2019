@@ -16,7 +16,6 @@ namespace KaffeeBibliothek
             }
         }
 
-
         //snippet: propfull
         private bool _padEingelegt = false;
 

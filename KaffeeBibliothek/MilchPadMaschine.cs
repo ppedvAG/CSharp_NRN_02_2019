@@ -7,24 +7,19 @@ using System.Threading.Tasks;
 
 namespace KaffeeBibliothek
 {
-    public class Vollautomat : Filtermaschine, IMilchEinfüllbar
+
+    public class MilchPadMaschine : PadMaschine, IMilchEinfüllbar
     {
+
         public override Bestellung.Kaffeearten Produziert
         {
             get
             {
-                return Bestellung.Kaffeearten.Cappuccino;
+                return Bestellung.Kaffeearten.EspressoMacchiato;
             }
         }
 
-        public static float Milchkapazität { get; set; } = 1;
-
         public float Milchmenge { get; private set; } = 0;
-
-        public Vollautomat(float startWassertstand) : base(startWassertstand)
-        {
-
-        }
 
         public void FülleMilchEin(float menge)
         {
@@ -39,9 +34,9 @@ namespace KaffeeBibliothek
             }
         }
 
-        public override string ToString()
+
+        public MilchPadMaschine(float startWassermenge) : base(startWassermenge)
         {
-            return $"{base.ToString()}\nMilchmenge: {Milchmenge:0.00} \\ {Milchkapazität} Liter";
         }
 
         public override bool BereiteZu(float zuProduzierendeMenge)

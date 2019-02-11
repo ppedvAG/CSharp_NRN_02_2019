@@ -5,19 +5,53 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using KaffeeBibliothek;
 
 namespace MisterBarista
 {
-    public enum KaffeemaschinenArten { Filtermaschine, PadMaschine, Vollautomat }
+    public enum KaffeemaschinenArten { Filtermaschine, PadMaschine, Vollautomat, MilchPadMaschine }
 
     public partial class Form1 : Form
     {
+        public const int Start_Zeit = 10;
+
+        private int _score = 0;
+        public int Score
+        {
+            get
+            {
+                return _score;
+            }
+            set
+            {
+                //Score darf nicht unter 0 fallen
+                _score = value >= 0 ? value : 0;
+
+                string punkt = _score == 1 ? "Punkt" : "Punkte";
+
+                labelScore.Text = $"Score: {Score} {punkt}!";
+            }
+        }
+
+        //propfull
+        private int _verbleibendeZeit = 5;
+        public int VerbleibendeZeit
+        {
+            get { return _verbleibendeZeit; }
+            set
+            {
+                _verbleibendeZeit = value;
+                labelCountdown.Text = $"Verbleibend: {VerbleibendeZeit} Sekunden";
+            }
+        }
+
         Filtermaschine _filterMaschine;
         PadMaschine _padMaschine;
         Vollautomat _vollautomat;
+        MilchPadMaschine _milchpad;
         Kaffeemaschine _ausgewählteMaschine;
         Random _random = new Random();
 
@@ -30,6 +64,7 @@ namespace MisterBarista
             _filterMaschine = new Filtermaschine(0);
             _padMaschine = new PadMaschine(0);
             _vollautomat = new Vollautomat(0.5f);
+            _milchpad = new MilchPadMaschine(0f);
 
             //Event-Handler für das Ergeignis Bedienungsfehler registrieren
             _filterMaschine.Bedienungsfehler += FehlerIstAufgetreten;
@@ -39,8 +74,12 @@ namespace MisterBarista
             //Neue Bestellung erzeugen
             GeneriereNeueBestellung();
 
+            Score = 0;
+            VerbleibendeZeit = Start_Zeit;
+
             labelBedienungsfehler.Visible = false;
         }
+       
 
         private void GeneriereNeueBestellung()
         {
@@ -48,8 +87,8 @@ namespace MisterBarista
 
             //Arrays befüllen
             float[] möglicheMengen = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
-          
-            Bestellung.Kaffeearten[] möglicheKaffeearten = new Bestellung.Kaffeearten[] 
+
+            Bestellung.Kaffeearten[] möglicheKaffeearten = new Bestellung.Kaffeearten[]
             {
                 Bestellung.Kaffeearten.Cappuccino,
                 Bestellung.Kaffeearten.Espresso,
@@ -77,7 +116,7 @@ namespace MisterBarista
             _aktuelleBestellung = new Bestellung(menge, kaffeeart);
 
             //Bestellung anzeigen
-            labelBestellung.Text = $"{_aktuelleBestellung.Menge} Liter {_aktuelleBestellung.Kaffeeart} bitte!"; 
+            labelBestellung.Text = $"{_aktuelleBestellung.Menge} Liter {_aktuelleBestellung.Kaffeeart} bitte!";
         }
 
         //Event-Handler
@@ -86,6 +125,8 @@ namespace MisterBarista
             //Was soll bei einem Bedienungsfehler passieren?
             labelBedienungsfehler.Visible = true;
             labelBedienungsfehler.Text = fehlermeldung;
+
+            Score--;
         }
 
         private void Formular_Wurde_Geladen(object sender, EventArgs e)
@@ -119,6 +160,9 @@ namespace MisterBarista
                     break;
                 case KaffeemaschinenArten.Vollautomat:
                     _ausgewählteMaschine = _vollautomat;
+                    break;
+                case KaffeemaschinenArten.MilchPadMaschine:
+                    _ausgewählteMaschine = _milchpad;
                     break;
                 default:
                     break;
@@ -182,7 +226,7 @@ namespace MisterBarista
 
         private void button_milch_click(object sender, EventArgs e)
         {
-            if (_ausgewählteMaschine is Vollautomat)
+            if (_ausgewählteMaschine is IMilchEinfüllbar)
             {
                 FülleEtwasEin(textBoxMilch, "Milchmenge", FülleMilchEin);
             }
@@ -213,18 +257,34 @@ namespace MisterBarista
 
         private void FülleKaffeEin(float menge)
         {
+            
+
             ((Filtermaschine)_ausgewählteMaschine).FülleKaffeEin(menge);
         }
 
         private void FülleMilchEin(float menge)
         {
-            ((Vollautomat)_ausgewählteMaschine).FülleMilchEin(menge);
+            #region Code ohne Interfaces
+            //if(_ausgewählteMaschine is Vollautomat vollautomat)
+            //{
+            //    //Vollautomat vollautomat = (Vollautomat)_ausgewählteMaschine;
+            //    vollautomat.FülleMilchEin(menge);
+            //}
+            //else if(_ausgewählteMaschine is MilchPadMaschine pad) {
+            //    pad.FülleMilchEin(menge);
+            //}
+            #endregion
+
+            if (_ausgewählteMaschine is IMilchEinfüllbar einfüllbareMaschine)
+            {
+                einfüllbareMaschine.FülleMilchEin(menge);
+            }
         }
         #endregion
 
         private void zubereiten_button_click(object sender, EventArgs e)
         {
-            if(_ausgewählteMaschine == null)
+            if (_ausgewählteMaschine == null)
             {
                 FehlerIstAufgetreten("Es wurde keine Maschine ausgewählt!");
                 return;
@@ -267,12 +327,13 @@ namespace MisterBarista
             #endregion
 
             bool hatGeklappt = _ausgewählteMaschine.BereiteZu(_aktuelleBestellung.Menge);
-            if (hatGeklappt == false)
+            if (!hatGeklappt)
             {
                 return;
             }
 
             //Nächste Bestellung anzeigen
+            Score++;
             GeneriereNeueBestellung();
 
             labelMaschinenbeschreibung.Text = _ausgewählteMaschine.ToString();
@@ -300,5 +361,22 @@ namespace MisterBarista
         }
         #endregion
 
+        private void timerCountdown_Tick(object sender, EventArgs e)
+        {
+            VerbleibendeZeit--;
+
+            if (VerbleibendeZeit <= 0)
+            {
+                timerCountdown.Stop();
+                HighscoreForm form = new HighscoreForm(Score);
+                form.ShowDialog();
+                this.Close();
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            timerCountdown.Stop();
+        }
     }
 }

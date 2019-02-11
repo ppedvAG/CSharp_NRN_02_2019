@@ -20,6 +20,7 @@ namespace KaffeeBibliothek
 
 
 
+
         /// <summary>
         /// Wasserkapazität in Litern
         /// </summary>
@@ -63,6 +64,7 @@ namespace KaffeeBibliothek
 
             return true;
         }
+        
 
         public override string ToString()
         {

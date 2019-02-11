@@ -17,8 +17,10 @@ namespace MisterBarista
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            //Startformular festlegen
+            Application.Run(new StartForm());
 
+            //Virus programmieren
             //Thread.Sleep(4000);
            
             //MessageBox.Show("Sie haben sich einen Virus eingefangen, haha!");

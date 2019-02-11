@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listBoxKaffeemaschinen = new System.Windows.Forms.ListBox();
             this.labelMaschinenbeschreibung = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -41,6 +42,9 @@
             this.button5 = new System.Windows.Forms.Button();
             this.labelBedienungsfehler = new System.Windows.Forms.Label();
             this.labelBestellung = new System.Windows.Forms.Label();
+            this.labelScore = new System.Windows.Forms.Label();
+            this.timerCountdown = new System.Windows.Forms.Timer(this.components);
+            this.labelCountdown = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,12 +197,42 @@
             this.labelBestellung.TabIndex = 11;
             this.labelBestellung.Text = "Bestellung:";
             // 
+            // labelScore
+            // 
+            this.labelScore.AutoSize = true;
+            this.labelScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelScore.ForeColor = System.Drawing.Color.Black;
+            this.labelScore.Location = new System.Drawing.Point(452, 90);
+            this.labelScore.Name = "labelScore";
+            this.labelScore.Size = new System.Drawing.Size(97, 32);
+            this.labelScore.TabIndex = 12;
+            this.labelScore.Text = "Score:";
+            // 
+            // timerCountdown
+            // 
+            this.timerCountdown.Enabled = true;
+            this.timerCountdown.Interval = 1000;
+            this.timerCountdown.Tick += new System.EventHandler(this.timerCountdown_Tick);
+            // 
+            // labelCountdown
+            // 
+            this.labelCountdown.AutoSize = true;
+            this.labelCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCountdown.ForeColor = System.Drawing.Color.Black;
+            this.labelCountdown.Location = new System.Drawing.Point(452, 142);
+            this.labelCountdown.Name = "labelCountdown";
+            this.labelCountdown.Size = new System.Drawing.Size(167, 32);
+            this.labelCountdown.TabIndex = 14;
+            this.labelCountdown.Text = "Countdown:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Khaki;
             this.ClientSize = new System.Drawing.Size(1286, 707);
+            this.Controls.Add(this.labelCountdown);
+            this.Controls.Add(this.labelScore);
             this.Controls.Add(this.labelBestellung);
             this.Controls.Add(this.labelBedienungsfehler);
             this.Controls.Add(this.panel1);
@@ -206,6 +240,7 @@
             this.Controls.Add(this.listBoxKaffeemaschinen);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Formular_Wurde_Geladen);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -229,6 +264,9 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Label labelBedienungsfehler;
         private System.Windows.Forms.Label labelBestellung;
+        private System.Windows.Forms.Label labelScore;
+        private System.Windows.Forms.Timer timerCountdown;
+        private System.Windows.Forms.Label labelCountdown;
     }
 }
 

@@ -8,7 +8,7 @@ namespace KaffeeBibliothek
 {
     public class Bestellung
     {
-        public enum Kaffeearten { Filterkaffee, Cappuccino, Espresso }
+        public enum Kaffeearten { Filterkaffee, Cappuccino, Espresso, EspressoMacchiato }
 
         public float Menge { get; private set; }
         public Kaffeearten Kaffeeart { get; private set; }
